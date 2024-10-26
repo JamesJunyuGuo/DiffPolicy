@@ -27,12 +27,12 @@ Running experiments based our code could be quite easy, so below we use `walker2
 For reproducing the optimal results, we recommend running with 'online model selection' as follows. 
 The best_score will be stored in the `best_score_online.txt` file.
 ```.bash
-python main.py --env_name walker2d-medium-expert-v2 --device 0 --ms online --lr_decay
+python3 main.py --env_name walker2d-medium-expert-v2 --device 0 --ms online --lr_decay
 ```
 
 For conducting 'offline model selection', run the code below. The best_score will be stored in the `best_score_offline.txt` file.
 ```.bash
-python main.py --env_name walker2d-medium-expert-v2 --device 0 --ms offline --lr_decay --early_stop
+python3 main.py --env_name walker2d-medium-expert-v2 --device 0 --ms offline --lr_decay --early_stop
 ```
 
 Hyperparameters for Diffusion-QL have been hard coded in `main.py` for easily reproducing our reported results. 

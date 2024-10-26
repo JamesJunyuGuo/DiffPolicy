@@ -38,7 +38,9 @@ def generate_data(num, device = 'cpu'):
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-device = 'cuda:0'
+# device = 'cuda:0'
+device = torch.device('cpu')
+#we change the device to either cuda or cpu
 num_data = int(10000)
 data_sampler = generate_data(num_data, device)
 
@@ -55,12 +57,13 @@ beta_schedule = 'vp'
 hidden_dim = 128
 lr = 3e-4
 
-num_epochs = 1000
+num_epochs = 100
 batch_size = 100
 iterations = int(num_data / batch_size)
 
 img_dir = 'toy_imgs/bc'
 os.makedirs(img_dir, exist_ok=True)
+print("create image dir")
 fig, axs = plt.subplots(1, 5, figsize=(5.5 * 5, 5))
 axis_lim = 1.1
 
@@ -88,7 +91,7 @@ mle_agent = MLE_Agent(state_dim=state_dim,
                       hidden_dim=hidden_dim)
 
 
-for i in range(num_epochs):
+for i in range(1,num_epochs+1):
     
     mle_agent.train(data_sampler,
                     iterations=iterations,
@@ -120,7 +123,7 @@ cvae_agent = CVAE_Agent(state_dim=state_dim,
                         hidden_dim=hidden_dim)
 
 
-for i in range(num_epochs):
+for i in range(1,1+num_epochs):
     
     cvae_agent.train(data_sampler,
                      iterations=iterations,
@@ -152,7 +155,7 @@ mmd_agent =  MMD_Agent(state_dim=state_dim,
                        lr=lr,
                        hidden_dim=hidden_dim)
 
-for i in range(num_epochs):
+for i in range(1,1+num_epochs):
 
     mmd_agent.train(data_sampler,
                     iterations=iterations,
@@ -186,13 +189,13 @@ diffusion_agent = Diffusion_Agent(state_dim=state_dim,
                                   hidden_dim=hidden_dim,
                                   lr=lr)
 
-for i in range(num_epochs):
+for i in range(1,1+num_epochs):
     
     diffusion_agent.train(data_sampler,
                           iterations=iterations,
                           batch_size=batch_size)
     
-    if i % 100 == 0:
+    if i % 1 == 0:
         print(f'Epoch: {i}')
 
 new_state = torch.zeros((num_eval, 2), device=device)
@@ -206,7 +209,7 @@ axs[4].set_ylabel('y', fontsize=20)
 axs[4].set_title('BC-Diffusion', fontsize=25)
 
 fig.tight_layout()
-fig.savefig(os.path.join(img_dir, f'bc_diffusion_{T}_sd{seed}.pdf'))
+fig.savefig(os.path.join(img_dir, f'bc_diffusion_{T}_sd{seed}.png'))
 
 
 
