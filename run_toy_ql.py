@@ -81,126 +81,126 @@ beta_schedule = 'vp'
 # eta = 10.0
 # lr = 3e-4
 
-num_epochs = 100
-batch_size = 100
-iterations = int(num_data / batch_size)
+# num_epochs = 100
+# batch_size = 100
+# iterations = int(num_data / batch_size)
 
-img_dir = f'toy_imgs/{args.dir}'
-os.makedirs(img_dir, exist_ok=True)
-print("make dir", img_dir)
-num_eval = 100
+# img_dir = f'toy_imgs/{args.dir}'
+# os.makedirs(img_dir, exist_ok=True)
+# print("make dir", img_dir)
+# num_eval = 100
 
-fig, axs = plt.subplots(1, 5, figsize=(5.5 * 5, 5))
-axis_lim = 1.1
+# fig, axs = plt.subplots(1, 5, figsize=(5.5 * 5, 5))
+# axis_lim = 1.1
 
-pos = 0.8
-std = 0.05
-left_up_conor = Normal(torch.tensor([-pos, pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
-left_bottom_conor = Normal(torch.tensor([-pos, -pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
-right_up_conor = Normal(torch.tensor([pos, pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
-right_bottom_conor = Normal(torch.tensor([pos, -pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
-axs[0].scatter(left_up_conor[:, 0], left_up_conor[:, 1], label=r"$r \sim N (3.0, 0.5)$")
-axs[0].scatter(left_bottom_conor[:, 0], left_bottom_conor[:, 1], label=r"$r \sim N (0.0, 0.5)$")
-axs[0].scatter(right_up_conor[:, 0], right_up_conor[:, 1], label=r"$r \sim N (1.5, 0.5)$")
-axs[0].scatter(right_bottom_conor[:, 0], right_bottom_conor[:, 1], label=r"$r \sim N (5.0, 0.5)$")
-axs[0].set_xlim(-axis_lim, axis_lim)
-axs[0].set_ylim(-axis_lim, axis_lim)
-axs[0].set_xlabel('x', fontsize=20)
-axs[0].set_ylabel('y', fontsize=20)
-axs[0].set_title('Add Reward', fontsize=25)
-axs[0].legend(loc='best', fontsize=15, title_fontsize=15)
-#fig.colorbar(c, ax=axs[0])
+# pos = 0.8
+# std = 0.05
+# left_up_conor = Normal(torch.tensor([-pos, pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
+# left_bottom_conor = Normal(torch.tensor([-pos, -pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
+# right_up_conor = Normal(torch.tensor([pos, pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
+# right_bottom_conor = Normal(torch.tensor([pos, -pos]), torch.tensor([std, std])).sample((200,)).clip(-1.0, 1.0).numpy()
+# axs[0].scatter(left_up_conor[:, 0], left_up_conor[:, 1], label=r"$r \sim N (3.0, 0.5)$")
+# axs[0].scatter(left_bottom_conor[:, 0], left_bottom_conor[:, 1], label=r"$r \sim N (0.0, 0.5)$")
+# axs[0].scatter(right_up_conor[:, 0], right_up_conor[:, 1], label=r"$r \sim N (1.5, 0.5)$")
+# axs[0].scatter(right_bottom_conor[:, 0], right_bottom_conor[:, 1], label=r"$r \sim N (5.0, 0.5)$")
+# axs[0].set_xlim(-axis_lim, axis_lim)
+# axs[0].set_ylim(-axis_lim, axis_lim)
+# axs[0].set_xlabel('x', fontsize=20)
+# axs[0].set_ylabel('y', fontsize=20)
+# axs[0].set_title('Add Reward', fontsize=25)
+# axs[0].legend(loc='best', fontsize=15, title_fontsize=15)
+# #fig.colorbar(c, ax=axs[0])
 
 # Plot QL-MLE
-from toy_experiments.ql_mle import QL_MLE
+# from toy_experiments.ql_mle import QL_MLE
 
-agent = QL_MLE(state_dim=state_dim,
-               action_dim=action_dim,
-               max_action=max_action,
-               device=device,
-               discount=discount,
-               tau=tau,
-               eta=eta,
-               hidden_dim=hidden_dim,
-               lr=lr,
-               r_fun=None)
+# agent = QL_MLE(state_dim=state_dim,
+#                action_dim=action_dim,
+#                max_action=max_action,
+#                device=device,
+#                discount=discount,
+#                tau=tau,
+#                eta=eta,
+#                hidden_dim=hidden_dim,
+#                lr=lr,
+#                r_fun=None)
 
-for i in range(1, num_epochs + 1):
+# for i in range(1, num_epochs + 1):
 
-    agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
+#     agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
 
-    if i % 100 == 0:
-        print(f'QL-MLE Epoch: {i}')
+#     if i % 100 == 0:
+#         print(f'QL-MLE Epoch: {i}')
 
-new_state = torch.zeros((num_eval, 2), device=device)
-new_action = agent.actor.sample(new_state)
-new_action = new_action.detach().cpu().numpy()
-axs[1].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
-axs[1].set_xlim(-axis_lim, axis_lim)
-axs[1].set_ylim(-axis_lim, axis_lim)
-axs[1].set_xlabel('x', fontsize=20)
-axs[1].set_ylabel('y', fontsize=20)
-axs[1].set_title('TD3+BC', fontsize=25)
+# new_state = torch.zeros((num_eval, 2), device=device)
+# new_action = agent.actor.sample(new_state)
+# new_action = new_action.detach().cpu().numpy()
+# axs[1].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
+# axs[1].set_xlim(-axis_lim, axis_lim)
+# axs[1].set_ylim(-axis_lim, axis_lim)
+# axs[1].set_xlabel('x', fontsize=20)
+# axs[1].set_ylabel('y', fontsize=20)
+# axs[1].set_title('TD3+BC', fontsize=25)
 
-# Plot QL-CVAE
-from toy_experiments.ql_cvae import QL_CVAE
+# # Plot QL-CVAE
+# from toy_experiments.ql_cvae import QL_CVAE
 
-agent = QL_CVAE(state_dim=state_dim,
-                action_dim=action_dim,
-                max_action=max_action,
-                device=device,
-                discount=discount,
-                tau=tau,
-                hidden_dim=hidden_dim,
-                lr=lr,
-                r_fun=None)
+# agent = QL_CVAE(state_dim=state_dim,
+#                 action_dim=action_dim,
+#                 max_action=max_action,
+#                 device=device,
+#                 discount=discount,
+#                 tau=tau,
+#                 hidden_dim=hidden_dim,
+#                 lr=lr,
+#                 r_fun=None)
 
-for i in range(1, num_epochs + 1):
+# for i in range(1, num_epochs + 1):
 
-    agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
+#     agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
 
-    if i % 100 == 0:
-        print(f'QL-CVAE Epoch: {i}')
+#     if i % 100 == 0:
+#         print(f'QL-CVAE Epoch: {i}')
 
-new_state = torch.zeros((num_eval, 2), device=device)
-new_action = agent.vae.sample(new_state)
-new_action = new_action.detach().cpu().numpy()
-axs[2].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
-axs[2].set_xlim(-axis_lim, axis_lim)
-axs[2].set_ylim(-axis_lim, axis_lim)
-axs[2].set_xlabel('x', fontsize=20)
-axs[2].set_ylabel('y', fontsize=20)
-axs[2].set_title('BCQ', fontsize=25)
+# new_state = torch.zeros((num_eval, 2), device=device)
+# new_action = agent.vae.sample(new_state)
+# new_action = new_action.detach().cpu().numpy()
+# axs[2].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
+# axs[2].set_xlim(-axis_lim, axis_lim)
+# axs[2].set_ylim(-axis_lim, axis_lim)
+# axs[2].set_xlabel('x', fontsize=20)
+# axs[2].set_ylabel('y', fontsize=20)
+# axs[2].set_title('BCQ', fontsize=25)
 
-# Plot QL-MMD
-from toy_experiments.ql_mmd import QL_MMD
+# # Plot QL-MMD
+# from toy_experiments.ql_mmd import QL_MMD
 
-agent = QL_MMD(state_dim=state_dim,
-               action_dim=action_dim,
-               max_action=max_action,
-               device=device,
-               discount=discount,
-               tau=tau,
-               hidden_dim=hidden_dim,
-               lr=lr,
-               r_fun=None)
+# agent = QL_MMD(state_dim=state_dim,
+#                action_dim=action_dim,
+#                max_action=max_action,
+#                device=device,
+#                discount=discount,
+#                tau=tau,
+#                hidden_dim=hidden_dim,
+#                lr=lr,
+#                r_fun=None)
 
-for i in range(1, num_epochs + 1):
+# for i in range(1, num_epochs + 1):
 
-    agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
+#     agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
 
-    if i % 100 == 0:
-        print(f'QL-MMD Epoch: {i}')
+#     if i % 100 == 0:
+#         print(f'QL-MMD Epoch: {i}')
 
-new_state = torch.zeros((num_eval, 2), device=device)
-new_action = agent.actor.sample(new_state)
-new_action = new_action.detach().cpu().numpy()
-axs[3].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
-axs[3].set_xlim(-axis_lim, axis_lim)
-axs[3].set_ylim(-axis_lim, axis_lim)
-axs[3].set_xlabel('x', fontsize=20)
-axs[3].set_ylabel('y', fontsize=20)
-axs[3].set_title('BEAR-MMD', fontsize=25)
+# new_state = torch.zeros((num_eval, 2), device=device)
+# new_action = agent.actor.sample(new_state)
+# new_action = new_action.detach().cpu().numpy()
+# axs[3].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
+# axs[3].set_xlim(-axis_lim, axis_lim)
+# axs[3].set_ylim(-axis_lim, axis_lim)
+# axs[3].set_xlabel('x', fontsize=20)
+# axs[3].set_ylabel('y', fontsize=20)
+# axs[3].set_title('BEAR-MMD', fontsize=25)
 
 
 # Plot QL-Diffusion
@@ -233,12 +233,12 @@ for i in range(1, num_epochs+1):
 new_state = torch.zeros((num_eval, 2), device=device)
 new_action = agent.actor.sample(new_state)
 new_action = new_action.detach().cpu().numpy()
-axs[4].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
-axs[4].set_xlim(-axis_lim, axis_lim)
-axs[4].set_ylim(-axis_lim, axis_lim)
-axs[4].set_xlabel('x', fontsize=20)
-axs[4].set_ylabel('y', fontsize=20)
-axs[4].set_title('Diffusion-QL', fontsize=25)
+axs[2].scatter(new_action[:, 0], new_action[:, 1], alpha=0.3, color='#d62728')
+axs[2].set_xlim(-axis_lim, axis_lim)
+axs[2].set_ylim(-axis_lim, axis_lim)
+axs[2].set_xlabel('x', fontsize=20)
+axs[2].set_ylabel('y', fontsize=20)
+axs[2].set_title('Diffusion-QL', fontsize=25)
 
 file_name = f'ql_all_T{T}_eta{eta}_r_fun{args.r_fun}_lr{lr}_hd{hidden_dim}_mode_{args.mode}'
 file_name += f'_sd{args.seed}.png'

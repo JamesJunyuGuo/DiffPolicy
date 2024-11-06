@@ -14,6 +14,9 @@ from utils.data_sampler import Data_Sampler
 from utils.logger import logger, setup_logger
 from torch.utils.tensorboard import SummaryWriter
 
+
+print("import all the necessary env")
+print("---------------------------------")
 hyperparameters = {
     'halfcheetah-medium-v2':         {'lr': 3e-4, 'eta': 1.0,   'max_q_backup': False,  'reward_tune': 'no',          'eval_freq': 50, 'num_epochs': 2000, 'gn': 9.0,  'top_k': 1},
     'hopper-medium-v2':              {'lr': 3e-4, 'eta': 1.0,   'max_q_backup': False,  'reward_tune': 'no',          'eval_freq': 50, 'num_epochs': 2000, 'gn': 9.0,  'top_k': 2},
@@ -80,6 +83,7 @@ def train_agent(env, state_dim, action_dim, max_action, device, output_dir, args
     max_timesteps = args.num_epochs * args.num_steps_per_epoch
     metric = 100.
     utils.print_banner(f"Training Start", separator="*", num_star=90)
+    print("Iterations per epoch", int(args.eval_freq * args.num_steps_per_epoch))
     while (training_iters < max_timesteps) and (not early_stop):
         iterations = int(args.eval_freq * args.num_steps_per_epoch)
         loss_metric = agent.train(data_sampler,
@@ -208,6 +212,7 @@ if __name__ == "__main__":
     # parser.add_argument("--gn", default=-1.0, type=float)
 
     args = parser.parse_args()
+    print("finish args and parse")
     args.device = f"cuda:{args.device}" if torch.cuda.is_available() else "cpu"
     args.output_dir = f'{args.dir}'
 
@@ -238,8 +243,11 @@ if __name__ == "__main__":
     #     raise AssertionError("Experiment under this setting has been done!")
     variant = vars(args)
     variant.update(version=f"Diffusion-Policies-RL")
+    print("diffusion policy is ")
+    print(gym.envs.registry.all()) 
+    env = gym.make('bullet-walker2d-medium-v0')
 
-    env = gym.make(args.env_name)
+    # env = gym.make(args.env_name)
 
     env.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -254,7 +262,8 @@ if __name__ == "__main__":
     variant.update(max_action=max_action)
     setup_logger(os.path.basename(results_dir), variant=variant, log_dir=results_dir)
     utils.print_banner(f"Env: {args.env_name}, state_dim: {state_dim}, action_dim: {action_dim}")
-
+    print("start training")
+    print('-------------')
     train_agent(env,
                 state_dim,
                 action_dim,

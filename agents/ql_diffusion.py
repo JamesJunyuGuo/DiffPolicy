@@ -107,8 +107,10 @@ class Diffusion_QL(object):
     def train(self, replay_buffer, iterations, batch_size=100, log_writer=None):
 
         metric = {'bc_loss': [], 'ql_loss': [], 'actor_loss': [], 'critic_loss': []}
-        for _ in range(iterations):
+        for iter in range(1,1+iterations):
             # Sample replay buffer / batch
+            if iter%100==0:
+                print("training time ", iter)
             state, action, next_state, reward, not_done = replay_buffer.sample(batch_size)
 
             """ Q Training """

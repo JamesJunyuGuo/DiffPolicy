@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 from toy_experiments.toy_helpers import Data_Sampler
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--seed", default=2022, type=int)
-parser.add_argument("--num_epochs", default=100, type=int)
+parser.add_argument("--seed", default=2024, type=int)
+parser.add_argument("--num_epochs", default=1000, type=int)
 args = parser.parse_args()
 
 seed = args.seed
 num_epochs = args.num_epochs
-def generate_data(num, device = 'cpu'):
+def generate_data(num, device='cpu'):
     
     each_num = int(num / 4)
     pos = 0.8
@@ -28,12 +28,18 @@ def generate_data(num, device = 'cpu'):
     left_bottom_samples = left_bottom_conor.sample((each_num,)).clip(-1.0, 1.0)
     right_up_samples = right_up_conor.sample((each_num,)).clip(-1.0, 1.0)
     right_bottom_samples = right_bottom_conor.sample((each_num,)).clip(-1.0, 1.0)
-    
+
     data = torch.cat([left_up_samples, left_bottom_samples, right_up_samples, right_bottom_samples], dim=0)
 
     action = data
     state = torch.zeros_like(action)
-    reward = torch.zeros((num, 1))
+    
+    r_left_up = 5.0 + 0.5 * torch.randn((each_num, 1))
+    r_left_bottom = 0.5 * torch.randn((each_num, 1))
+    r_right_up = 1.5 + 0.5 * torch.randn((each_num, 1))
+    r_right_bottom = 5.0 + 0.5 * torch.randn((each_num, 1))
+    reward = torch.cat([r_left_up, r_left_bottom, r_right_up, r_right_bottom], dim=0)
+
     return Data_Sampler(state, action, reward, device)
 
 torch.manual_seed(seed)

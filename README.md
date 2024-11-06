@@ -32,7 +32,7 @@ python3 main.py --env_name walker2d-medium-expert-v2 --device 0 --ms online --lr
 
 For conducting 'offline model selection', run the code below. The best_score will be stored in the `best_score_offline.txt` file.
 ```.bash
-python3 main.py --env_name walker2d-medium-expert-v2 --device 0 --ms offline --lr_decay --early_stop
+python3 main.py --env_name halfcheetah-medium-expert-v2 --device 0 --ms offline --lr_decay --early_stop
 ```
 
 Hyperparameters for Diffusion-QL have been hard coded in `main.py` for easily reproducing our reported results. 
