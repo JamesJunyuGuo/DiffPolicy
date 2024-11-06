@@ -21,6 +21,7 @@ parser.add_argument("--r_fun", default='no', type=str)
 parser.add_argument("--lr", default=3e-4, type=float)
 parser.add_argument('--hidden_dim', default=128, type=int)
 parser.add_argument("--mode", default='whole_grad', type=str)
+parser.add_argument("--num_epochs", default=1000, type=int)
 args = parser.parse_args()
 
 r_fun_std = 0.25
@@ -33,7 +34,6 @@ hidden_dim = args.hidden_dim
 
 
 def generate_data(num, device='cpu'):
-    
     each_num = int(num / 4)
     pos = 0.8
     std = 0.05
@@ -77,21 +77,21 @@ model_type = 'MLP'
 
 T = 50
 beta_schedule = 'vp'
-# hidden_dim = 64
-# eta = 10.0
-# lr = 3e-4
+hidden_dim = 64
+eta = 10.0
+lr = 3e-4
 
-# num_epochs = 100
-# batch_size = 100
-# iterations = int(num_data / batch_size)
+num_epochs = args.num_epochs
+batch_size = 100
+iterations = int(num_data / batch_size)
 
-# img_dir = f'toy_imgs/{args.dir}'
-# os.makedirs(img_dir, exist_ok=True)
-# print("make dir", img_dir)
-# num_eval = 100
+img_dir = f'toy_imgs/{args.dir}'
+os.makedirs(img_dir, exist_ok=True)
+print("make dir", img_dir)
+num_eval = 100
 
-# fig, axs = plt.subplots(1, 5, figsize=(5.5 * 5, 5))
-# axis_lim = 1.1
+fig, axs = plt.subplots(1, 2, figsize=(5.5 * 5, 10))
+axis_lim = 1.1
 
 # pos = 0.8
 # std = 0.05
@@ -221,14 +221,15 @@ agent = QL_Diffusion(state_dim=state_dim,
                      r_fun=None,
                      mode=args.mode)
 
-
+print("Start Diffusion Training")
+print("-"*30)
 for i in range(1, num_epochs+1):
 
     b_loss, q_loss = agent.train(data_sampler, iterations=iterations, batch_size=batch_size)
 
-    if i % 1 == 0:
+    if i % 10 == 0:
         print(f'QL-Diffusion Epoch: {i} B_loss {b_loss} Q_loss {q_loss}')
-
+agent.save_model("./toy_experiments/checkpoints/ql/")
 # fig, ax = plt.subplots()
 new_state = torch.zeros((num_eval, 2), device=device)
 new_action = agent.actor.sample(new_state)
